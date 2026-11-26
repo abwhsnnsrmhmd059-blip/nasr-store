@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>متجر نصر APK</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0b12;color:#fff;overflow-x:hidden}
+button{cursor:pointer;border:none}
+input,textarea,select{outline:none}
+/* ===== SPLASH ===== */
+#splash{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#2b1a5e,#0b0b12 70%);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:fadeOut .5s ease 2.8s forwards}
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+.logoBig{width:120px;height:120px;background:linear-gradient(135deg,#a855f7,#06b6d4,#f59e0b);border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:65px;box-shadow:0 0 60px #a855f7;animation:float 1.6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.05)}}
+#splash h1{font-size:34px;margin-top:18px;font-weight:900}#splash h1 span{color:#a855f7}
+#splash p{color:#aaa;margin-top:6px}
+.loader{width:160px;height:5px;background:#222;border-radius:10px;margin-top:22px;overflow:hidden}.loader i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#a855f7,#06b6d4);border-radius:10px;animation:load 1.2s infinite}
+@keyframes load{0%{transform:translateX(160px)}100%{transform:translateX(-160px)}}
+/* ===== HEADER ===== */
+header{position:sticky;top:0;z-index:50;background:rgba(11,11,18,.92);backdrop-filter:blur(12px);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}
+.logo{display:flex;gap:10px;align-items:center}.logoIcon{width:44px;height:44px;background:linear-gradient(135deg,#a855f7,#06b6d4);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.logo b{font-size:18px;line-height:1}.logo small{color:#a855f7;font-size:12px}
+.iconBtn{width:42px;height:42px;border-radius:50%;background:#1c1c28;font-size:20px;color:#fff}
+/* ===== VIEWS ===== */
+.view{display:none;padding-bottom:90px;animation:slideIn .3s ease}.view.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateX(-15px)}to{opacity:1;transform:translateX(0)}}
+.page{padding:14px}.card{background:#16161f;border:1px solid #262636;border-radius:20px;padding:14px;margin-bottom:12px}
+.btnMain{width:100%;padding:14px;background:linear-gradient(90deg,#a855f7,#06b6d4);color:#fff;border-radius:14px;font-weight:900;font-size:16px}
+.btnGhost{padding:10px 16px;background:#222;border-radius:20px;color:#fff;font-weight:700}
+input,textarea,select{width:100%;padding:13px;border-radius:13px;border:1px solid #333;background:#0f0f18;color:#fff;margin-bottom:10px;font-size:14px}
+label{font-size:13px;color:#aaa;display:block;margin:8px 0 5px}
+/* Banner */
+.banner{height:170px;border-radius:20px;overflow:hidden;position:relative;margin-bottom:14px;background:#1a1a2a}
+.banner img{width:100%;height:100%;object-fit:cover}.bannerTxt{position:absolute;bottom:0;right:0;left:0;padding:14px;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.dots{display:flex;justify-content:center;gap:6px;margin:-8px 0 14px}.dots i{width:8px;height:8px;border-radius:50%;background:#333}.dots i.on{background:#a855f7;width:22px;border-radius:10px}
+/* Cats */
+.cats{display:flex;gap:8px;margin-bottom:14px}.cat{flex:1;text-align:center;padding:13px 6px;border-radius:16px;background:#16161f;border:1px solid #262636;font-weight:800;font-size:14px}.cat.active{background:linear-gradient(135deg,#a855f7,#06b6d4);border:none}
+/* App Row */
+.appRow{display:flex;gap:12px;align-items:center;padding:12px;background:#16161f;border-radius:18px;margin-bottom:10px;border:1px solid #222}
+.appRow img{width:62px;height:62px;border-radius:16px;object-fit:cover}
+.appRow b{font-size:15px}.appRow small{color:#888}
+.tag{font-size:11px;background:#222;padding:3px 8px;border-radius:10px;color:#a855f7}
+/* Drawer */
+#drawer{position:fixed;top:0;right:0;bottom:0;width:82%;max-width:320px;background:#12121c;z-index:200;transform:translateX(110%);transition:.3s;padding:18px;border-left:1px solid #333}
+#drawer.open{transform:translateX(0)}
+.drawerItem{padding:14px;border-radius:14px;background:#1a1a26;margin-bottom:10px;display:flex;gap:10px;align-items:center;font-weight:700}
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none}
+/* Chat */
+#chatMsgs{height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px}
+.msg{max-width:80%;padding:10px 13px;border-radius:18px;font-size:14px}.msg img{width:100%;border-radius:12px;margin-top:6px}
+.me{background:linear-gradient(135deg,#a855f7,#06b6d4);align-self:flex-start}.other{background:#222;align-self:flex-end}
+/* Bottom Nav Admin/Public */
+.bottom{position:fixed;bottom:0;right:0;left:0;background:#12121c;border-top:1px solid #333;display:flex;justify-content:space-around;padding:10px 0;z-index:60}
+.bottom button{background:none;color:#888;font-size:12px}.bottom button.active{color:#a855f7;font-weight:900}
+.adminBtn{width:100%;padding:16px;border-radius:18px;background:#16161f;border:1px solid #262636;color:#fff;text-align:right;display:flex;gap:12px;align-items:center;margin-bottom:10px;font-weight:800;font-size:15px}
+.adminBtn span{font-size:24px}
+.notif{position:fixed;top:70px;right:14px;left:14px;background:linear-gradient(90deg,#a855f7,#06b6d4);padding:13px;border-radius:16px;z-index:90;display:none;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#offline{position:fixed;inset:0;background:#0b0b12;z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px}
+#loginView{position:fixed;inset:0;background:#0b0b12;z-index:900;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+<div class="logoBig">👑</div>
+<h1>متجر نصر <span>APK</span></h1>
+<p>أفضل التطبيقات • آمن • سريع • مجاني</p>
+<div style="display:flex;gap:6px;margin-top:14px"><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span style="color:#aaa">4.9</span></div>
+<div class="loader"><i></i></div>
+<p style="font-size:12px;margin-top:10px">صُنع بحب في عدن 🇾🇪 | نصر أبوحسن</p>
+</div>
+
+<!-- LOGIN -->
+<div id="loginView">
+<div class="logoBig" style="width:90px;height:90px;font-size:45px">📱</div>
+<h2 style="margin:16px 0 6px;font-size:26px">أهلاً بك في متجر نصر APK</h2>
+<p style="color:#aaa;font-size:13px;margin-bottom:18px">ادخل رقم جوالك مرة واحدة فقط<br>بيكون حسابك الدائم، واذا مسحت التطبيق ورجعت<br>ادخل بنفس الرقم ويرجع حسابك كامل</p>
+<input id="phoneInput" type="tel" placeholder="📱 رقم الجوال - مثال: 770210804" style="text-align:center;font-size:17px">
+<button class="btnMain" onclick="doLogin()">دخول المتجر 🚀</button>
+<p style="font-size:11px;color:#666;margin-top:14px">بالدخول أنت توافق على شروط المتجر<br>رقمك محفوظ وآمن ولا يظهر لأحد</p>
+</div>
+
+<div id="overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div id="drawer">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><b style="font-size:19px">القائمة ☰</b><button onclick="closeDrawer()" style="background:#222;color:#fff;width:36px;height:36px;border-radius:50%">✕</button></div>
+<div style="background:linear-gradient(135deg,#a855f7,#06b6d4);padding:14px;border-radius:16px;margin-bottom:14px"><b id="drawerPhone">👤 زائر</b><br><small>متجر نصر APK - حسابك محفوظ</small></div>
+<div class="drawerItem" onclick="openView('downloadsView')">⬇️ التنزيلات <small style="color:#888">- تطبيقاتك</small></div>
+<div class="drawerItem" onclick="openView('updatesView')">🔄 التحديثات <small style="color:#888">- آخر التحديثات</small></div>
+<div class="drawerItem" onclick="openView('topView')">🏆 الأعلى درجة <small style="color:#888">- الأكثر تقييماً</small></div>
+<div class="drawerItem" onclick="openView('chatView')">💬 شات التواصل مع المطور</div>
+<div class="drawerItem" onclick="openView('aboutView')">ℹ️ عن التطبيق</div>
+<div class="drawerItem" onclick="logout()" style="color:#ff6b6b">🚪 تسجيل خروج</div>
+</div>
+
+<div class="notif" id="notifBox"></div>
+
+<!-- ===== PUBLIC ===== -->
+<header id="mainHeader">
+<div class="logo"><div class="logoIcon">👑</div><div><b>متجر نصر APK</b><br><small>NASR STORE • عدن</small></div></div>
+<div style="display:flex;gap:6px"><button class="iconBtn" onclick="openView('searchView')">🔍</button><button class="iconBtn" onclick="openDrawer()">⋮</button></div>
+</header>
+
+<!-- HOME -->
+<div class="view active" id="homeView">
+<div class="page">
+<!-- About Banner 3 صور -->
+<div class="banner" id="mainBanner"><img id="bannerImg" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900"><div class="bannerTxt"><b id="bannerTitle">أهلاً بك في متجر نصر APK 👑</b><br><small id="bannerSub">حمّل أفضل التطبيقات بأمان وسرعة</small></div></div>
+<div class="dots"><i class="on"></i><i></i><i></i></div>
+
+<!-- شرح + زرارين -->
+<div class="card" style="text-align:center">
+<h3>لماذا متجر نصر APK؟ ✨</h3>
+<p style="color:#aaa;font-size:13px;margin:8px 0;line-height:1.7">تطبيقات مختارة بعناية، آمنة 100%، بدون إعلانات مزعجة، وتحديثات مستمرة من المطور نصر أبوحسن. حمّل وجرّب وقيّم.</p>
+<div style="display:flex;gap:8px"><button class="btnMain" style="flex:1" onclick="openView('chatView')">💬 راسل المطور</button><button class="btnGhost" style="flex:1" onclick="window.open('https://wa.me/967770210804')">📱 واتساب 770210804</button></div>
+</div>
+
+<div class="cats">
+<div class="cat active" onclick="setCat('الترفيه',this)">🎮<br>الترفيه</div>
+<div class="cat" onclick="setCat('التعلم',this)">📚<br>التعلم</div>
+<div class="cat" onclick="setCat('العمل',this)">💼<br>العمل</div>
+</div>
+
+<!-- اعلانات المدير -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0 10px"><b>📢 إعلانات المدير</b><small style="color:#a855f7">مقاس الإعلان المثالي: 1200 × 500</small></div>
+<div id="adsArea"></div>
+
+<div style="display:flex;justify-content:space-between;margin:10px 0"><b id="catTitle">🎮 تطبيقات الترفيه</b><span style="color:#a855f7;font-size:13px" onclick="openView('allAppsView')">عرض الكل ›</span></div>
+<div id="appsList"></div>
+</div>
+</div>
+
+<!-- APP DETAIL -->
+<div class="view" id="appDetailView"><div class="page" id="appDetailContent"></div></div>
+<!-- CHAT -->
+<div class="view" id="chatView"><div class="page">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><b>💬 شات المطور نصر أبوحسن</b><span style="color:#25D366;font-size:12px">● متصل</span></div>
+<div class="card"><div id="chatMsgs"></div>
+<div style="display:flex;gap:6px;margin-top:10px"><input id="chatInput" placeholder="اكتب رسالتك..."><button onclick="sendChat()" style="background:#a855f7;color:#fff;padding:0 18px;border-radius:12px;font-size:18px">➤</button><label style="background:#222;padding:12px 14px;border-radius:12px;cursor:pointer;margin:0">📷<input type="file" accept="image/*" hidden onchange="sendChatImage(event)"></label></div>
+<small style="color:#888">الشات مثل واتساب - ترسل نص وصور، والمطور يرد عليك هنا</small></div>
+</div></div>
+<!-- ABOUT -->
+<div class="view" id="aboutView"><div class="page">
+<button class="btnGhost" onclick="goBack()">‹ رجوع</button>
+<div class="banner" style="margin-top:12px"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=900"><div class="bannerTxt"><b>مرحباً بك 👋</b><br><small>متجر نصر APK - وجهتك الأولى للتطبيقات</small></div></div>
+<div class="banner"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900"><div class="bannerTxt"><b>شرح التطبيق 📚</b><br><small>اختر القسم، اختر التطبيق، اضغط تحميل، واستمتع</small></div></div>
+<div class="banner"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=900"><div class="bannerTxt"><b>تواصل مع المطور 📞</b><br><small>نصر أبوحسن - 770210804</small></div></div>
+<div class="card" style="text-align:center"><div class="logoBig" style="width:80px;height:80px;font-size:40px;margin:auto">👑</div><h2 style="margin-top:10px">متجر نصر APK</h2><p style="color:#aaa;font-size:13px;line-height:1.7;margin:8px 0">متجر تطبيقات يمني، يجمع لك أفضل التطبيقات الترفيهية والتعليمية والعملية في مكان واحد. آمن، سريع، ومجاني.<br><br>المطور: <b style="color:#fff">نصر أبوحسن</b><br>📱 770210804<br>📍 عدن - اليمن</p>
+<button class="btnMain" onclick="window.open('https://wa.me/967770210804')">تواصل واتساب 💬</button></div>
+</div></div>
+<!-- DOWNLOADS / UPDATES / TOP / ALL -->
+<div class="view" id="downloadsView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">⬇️ التنزيلات</h2><div id="downloadsList"></div></div></div>
+<div class="view" id="updatesView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">🔄 التحديثات</h2><div id="updatesList"></div></div></div>
+<div class="view" id="topView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">🏆 الأعلى درجة</h2><div id="topList"></div></div></div>
+<div class="view" id="allAppsView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">📱 كل التطبيقات</h2><div id="allAppsList"></div></div></div>
+<div class="view" id="searchView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">🔍 بحث</h2><input id="searchInput" placeholder="ابحث عن تطبيق..." oninput="doSearch()"><div id="searchResult"></div></div></div>
+
+<!-- ===== ADMIN ===== -->
+<div class="view" id="adminHomeView"><div class="page">
+<div style="text-align:center;margin-bottom:16px"><div class="logoBig" style="width:70px;height:70px;font-size:35px;margin:auto">👑</div><h2 style="margin-top:10px">أهلاً المدير نصر 👑</h2><p style="color:#aaa;font-size:13px">لوحة تحكم كاملة - كل زر يفتح واجهة جديدة</p></div>
+<div style="display:flex;gap:8px;margin-bottom:12px"><div class="card" style="flex:1;text-align:center"><b style="color:#a855f7;font-size:22px" id="statUsers">0</b><br><small>مشترك</small></div><div class="card" style="flex:1;text-align:center"><b style="color:#06b6d4;font-size:22px" id="statApps">0</b><br><small>تطبيق</small></div><div class="card" style="flex:1;text-align:center"><b style="color:#f59e0b;font-size:22px" id="statChats">0</b><br><small>محادثة</small></div></div>
+<button class="adminBtn" onclick="openView('adminUsersView')"><span>👥</span> الجمهور <small style="color:#888">- جميع المشتركين وأرقامهم</small></button>
+<button class="adminBtn" onclick="openView('adminChatListView')"><span>💬</span> الشات <small style="color:#888">- رد على الزباين</small></button>
+<button class="adminBtn" onclick="openView('adminUpdatesView')"><span>🔄</span> التحديثات <small style="color:#888">- حدّث أي تطبيق</small></button>
+<button class="adminBtn" onclick="openView('adminAdsView')"><span>📢</span> الإعلانات <small style="color:#888">- صور تظهر للجمهور</small></button>
+<button class="adminBtn" onclick="openView('adminNotifView')"><span>🔔</span> الإشعارات <small style="color:#888">- أرسل إشعار للكل</small></button>
+<button class="adminBtn" onclick="openView('adminAppsView')"><span>📱</span> التطبيقات <small style="color:#888">- أضف تطبيق جديد</small></button>
+<button class="adminBtn" onclick="openView('adminCommentsView')"><span>💭</span> التعليقات <small style="color:#888">- كل تعليقات التطبيقات</small></button>
+<button class="adminBtn" onclick="logout()" style="border-color:#ff6b6b"><span>🚪</span> خروج من المدير</button>
+</div></div>
+
+<div class="view" id="adminUsersView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">👥 الجمهور - <span id="usersCount"></span></h2><div id="adminUsersList"></div></div></div>
+<div class="view" id="adminChatListView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">💬 أرقام اللي راسلوك</h2><p style="color:#888;font-size:13px">اضغط على الرقم عشان تفتح شاته منفصل وترد عليه</p><div id="adminChatList" style="margin-top:12px"></div></div></div>
+<div class="view" id="adminChatOneView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع لقائمة الأرقام</button><h2 id="adminChatTitle" style="margin:12px 0"></h2><div class="card"><div id="adminChatMsgs" style="height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div><div style="display:flex;gap:6px;margin-top:10px"><input id="adminReplyInput" placeholder="ردك للزبون..."><button onclick="adminSendReply()" style="background:#a855f7;color:#fff;padding:0 18px;border-radius:12px">➤</button></div></div></div></div>
+<div class="view" id="adminUpdatesView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">🔄 التحديثات</h2><label>اختر التطبيق</label><select id="updSelect"></select><label>رابط الملف المحدث</label><input id="updLink" placeholder="https://..."><label>الإصدار الجديد</label><input id="updVersion" placeholder="مثال: 2.0"><button class="btnMain" onclick="saveUpdate()">حفظ التحديث ✅</button><div id="updList" style="margin-top:14px"></div></div></div>
+<div class="view" id="adminAdsView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">📢 الإعلانات</h2><div class="card"><b>📌 مقاس صور الإعلانات الصحيح:</b><br><span style="color:#a855f7">1200 × 500 بكسل - نسبة 16:7</span><br><small style="color:#aaa">قص صورتك بهذا المقاس قبل الرفع عشان تطلع جميلة بدون قص. تقدر ترفع 6 إعلانات أو أكثر.</small><br><label style="margin-top:12px">📷 اختر صورة من ملفاتك</label><input type="file" accept="image/*" id="adFile"><label>عنوان الإعلان</label><input id="adTitle" placeholder="مثال: عرض العيد"><button class="btnMain" onclick="addAd()">إضافة إعلان ➕</button></div><div id="adminAdsList"></div></div></div>
+<div class="view" id="adminNotifView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">🔔 الإشعارات</h2><div class="card"><label>نص الإشعار اللي يوصل للجمهور</label><textarea id="notifText" rows="3" placeholder="مثال: تطبيق جديد وصل 🔥 حمله الآن"></textarea><button class="btnMain" onclick="sendNotif()">إرسال إشعار للكل 📣</button></div><div id="notifHistory"></div></div></div>
+<div class="view" id="adminAppsView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">📱 إضافة تطبيق</h2><div class="card">
+<label>📷 صورة التطبيق من ملفاتك</label><input type="file" accept="image/*" id="appIconFile">
+<label>اسم التطبيق</label><input id="appName" placeholder="اسم التطبيق">
+<label>القسم - أنت تحدد النوع</label><select id="appCat"><option>الترفيه</option><option>التعلم</option><option>العمل</option></select>
+<label>رابط الملف APK</label><input id="appLink" placeholder="https://...">
+<label>الإصدار</label><input id="appVersion" placeholder="1.0">
+<label>حجم التطبيق</label><input id="appSize" placeholder="مثال: 45 MB">
+<label>الشرح عن التطبيق</label><textarea id="appDesc" rows="3"></textarea>
+<label>📷 صور للتطبيق من ملفاتك (تقدر تختار أكثر من صورة)</label><input type="file" accept="image/*" multiple id="appShotsFile">
+<button class="btnMain" onclick="addApp()">نشر التطبيق 🚀</button></div><div id="adminAppsList"></div></div></div>
+<div class="view" id="adminCommentsView"><div class="page"><button class="btnGhost" onclick="goBack()">‹ رجوع</button><h2 style="margin:12px 0">💭 التعليقات</h2><div id="adminCommentsList"></div></div></div>
+
+<div class="bottom" id="bottomNav">
+<button class="active" onclick="openView('homeView')">🏠<br>الرئيسية</button>
+<button onclick="openView('chatView')">💬<br>الشات</button>
+<button onclick="openView('downloadsView')">⬇️<br>التنزيلات</button>
+<button onclick="openView('aboutView')">ℹ️<br>عنا</button>
+</div>
+
+<!-- OFFLINE -->
+<div id="offline"><div style="font-size:70px">📡</div><h2 style="margin:14px 0">أنت غير متصل بالإنترنت</h2><p style="color:#aaa;line-height:1.7">لا تقلق، تطبيقك محفوظ.<br>شغّل النت ورجع، وبيشتغل كل شي طبيعي.<br>تطبيقاتك اللي حملتها موجودة.</p><button class="btnMain" style="width:auto;padding:12px 30px;margin-top:16px" onclick="checkOnline()">حاول مرة ثانية 🔄</button></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getDatabase,ref,push,onValue,set,update,remove,onChildAdded} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const cfg={apiKey:"AIzaSyC8rQZUj0MdZjD6H9vcvP9p4ijA7MNAljc",authDomain:"nasr-store-a0d74.firebaseapp.com",databaseURL:"https://nasr-store-a0d74-default-rtdb.firebaseio.com",projectId:"nasr-store-a0d74",storageBucket:"nasr-store-a0d74.firebasestorage.app",messagingSenderId:"2875234142",appId:"1:2875234142:web:f23d1081faff98f959a1cf"};
+const app=initializeApp(cfg); const db=getDatabase(app);
+let phone=localStorage.getItem('nasr_apk_phone')||null;
+let isAdmin=false, currentCat='الترفيه', apps={}, ads={}, users={}, chats={}, currentAppId=null, currentChatPhone=null, viewStack=['homeView'], myDownloads=JSON.parse(localStorage.getItem('nasr_downloads')||'[]');
+let bannerIdx=0; const banners=[{img:"https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=900",t:"أهلاً بك في متجر نصر APK 👑",s:"حمّل أفضل التطبيقات بأمان وسرعة"},{img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=900",t:"شرح سريع 📚",s:"اختر القسم > اختر التطبيق > اضغط تحميل"},{img:"https://images.unsplash.com/photo-1521791136064-7986c2920216?w=900",t:"تواصل مع المطور 📞",s:"نصر أبوحسن - 770210804"}];
+setInterval(()=>{bannerIdx=(bannerIdx+1)%3; const b=banners[bannerIdx]; const im=document.getElementById('bannerImg'); if(im){im.src=b.img; document.getElementById('bannerTitle').innerText=b.t; document.getElementById('bannerSub').innerText=b.s; document.querySelectorAll('.dots i').forEach((d,i)=>d.className=i==bannerIdx?'on':'');}},4000);
+
+// --- NAVIGATION: كل زر يفتح واجهة جديدة + زر الرجوع يرجع واجهة واحدة فقط ---
+window.openView=(id)=>{
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(viewStack[viewStack.length-1]!==id) viewStack.push(id);
+  window.scrollTo(0,0); closeDrawer();
+  document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));
+}
+window.goBack=()=>{
+  if(viewStack.length>1){viewStack.pop(); const prev=viewStack[viewStack.length-1];
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(prev).classList.add('active'); window.scrollTo(0,0);
+  }
+}
+window.addEventListener('popstate',()=>goBack());
+window.openDrawer=()=>{document.getElementById('drawer').classList.add('open');document.getElementById('overlay').style.display='block'}
+window.closeDrawer=()=>{document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').style.display='none'}
+
+// --- LOGIN: رقم فقط أول مرة ---
+window.doLogin=()=>{
+  const p=document.getElementById('phoneInput').value.trim();
+  if(p.length<9){alert('اكتب رقم جوال صحيح');return}
+  if(p==='915798'){ // المدير السري - لا يظهر لأحد
+    localStorage.setItem('nasr_apk_phone','915798'); phone='915798'; isAdmin=true;
+    document.getElementById('loginView').style.display='none';
+    document.getElementById('mainHeader').style.display='none'; document.getElementById('bottomNav').style.display='none';
+    openView('adminHomeView'); loadAdminStats(); return;
+  }
+  phone=p; localStorage.setItem('nasr_apk_phone',p);
+  set(ref(db,'users/'+p),{phone:p,joined:Date.now(),lastSeen:Date.now()});
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('drawerPhone').innerText='👤 '+p;
+  openView('homeView'); startChatListener(); listenNotifs();
+}
+window.logout=()=>{localStorage.removeItem('nasr_apk_phone'); location.reload()}
+
+// --- OFFLINE ---
+function updateOnline(){ const off=!navigator.onLine; document.getElementById('offline').style.display=off?'flex':'none'; }
+window.checkOnline=()=>{updateOnline(); if(navigator.onLine) alert('تم الاتصال ✅');}
+window.addEventListener('online',updateOnline); window.addEventListener('offline',updateOnline); updateOnline();
+
+// --- DATA ---
+onValue(ref(db,'apps'),s=>{apps=s.val()||{}; renderApps(); renderAdminApps(); renderTop(); renderUpdates();});
+onValue(ref(db,'ads'),s=>{ads=s.val()||{}; renderAds(); renderAdminAds();});
+onValue(ref(db,'users'),s=>{users=s.val()||{}; renderAdminUsers();});
+onValue(ref(db,'chats'),s=>{chats=s.val()||{}; renderAdminChatList();});
+
+function fileToBase64(file){return new Promise(res=>{const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(file);});}
+window.setCat=(c,el)=>{currentCat=c; document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('catTitle').innerText={الترفيه:'🎮 تطبيقات الترفيه',التعلم:'📚 تطبيقات التعلم',العمل:'💼 تطبيقات العمل'}[c]; renderApps();}
+function appCard(id,a){
+  return `<div class="appRow" onclick="openApp('${id}')"><img src="${a.icon||'https://via.placeholder.com/62'}"><div style="flex:1"><b>${a.name}</b><br><small>⭐ ${a.rating||'4.8'} • ⬇️ ${(a.downloads||0).toLocaleString()} تحميل • ${a.version||'1.0'}</small><br><span class="tag">${a.cat}</span></div><button class="btnGhost" style="background:#a855f7">تحميل</button></div>`;
+}
+function renderApps(){
+  const list=Object.entries(apps).filter(([_,a])=>a.cat===currentCat);
+  document.getElementById('appsList').innerHTML=list.length?list.map(([id,a])=>appCard(id,a)).join(''):'<p style="text-align:center;color:#888;padding:20px">لسا مافي تطبيقات في هذا القسم<br>المدير بيضيف قريباً 🔥</p>';
+  document.getElementById('allAppsList').innerHTML=Object.entries(apps).map(([id,a])=>appCard(id,a)).join('')||'مافي تطبيقات بعد';
+  const dl=myDownloads.map(id=>apps[id]).filter(Boolean);
+  document.getElementById('downloadsList').innerHTML=dl.length?dl.map((a,i)=>appCard(myDownloads[i],a)).join(''):'<p style="color:#888;text-align:center">لسا ما حملت شي</p>';
+}
+function renderTop(){
+  const sorted=Object.entries(apps).sort((a,b)=>(b[1].rating||0)-(a[1].rating||0));
+  document.getElementById('topList').innerHTML=sorted.map(([id,a])=>appCard(id,a)).join('')||'مافي تطبيقات';
+}
+function renderUpdates(){
+  document.getElementById('updatesList').innerHTML=Object.entries(apps).map(([id,a])=>`<div class="card"><b>${a.name}</b><br><small>الإصدار الحالي: ${a.version||'1.0'} - ${a.updatedAt?new Date(a.updatedAt).toLocaleDateString('ar'):''}</small><br><button class="btnGhost" style="margin-top:8px" onclick="openApp('${id}')">عرض التطبيق</button></div>`).join('')||'مافي تحديثات';
+  document.getElementById('updSelect').innerHTML=Object.entries(apps).map(([id,a])=>`<option value="${id}">${a.name}</option>`).join('');
+  document.getElementById('updList').innerHTML=Object.entries(apps).map(([id,a])=>`<div class="card"><b>${a.name}</b> - v${a.version}<br><small>${a.link||''}</small></div>`).join('');
+}
+window.openApp=(id)=>{
+  currentAppId=id; const a=apps[id]; if(!a) return;
+  document.getElementById('appDetailContent').innerHTML=`
+  <button class="btnGhost" onclick="goBack()">‹ رجوع</button>
+  <div class="card" style="text-align:center;margin-top:12px"><img src="${a.icon||''}" style="width:100px;height:100px;border-radius:22px;object-fit:cover"><h2 style="margin:10px 0 4px">${a.name}</h2><p style="color:#aaa;font-size:13px">${a.cat} • ⭐ ${a.rating||'4.8'} • ⬇️ ${(a.downloads||0).toLocaleString()} تحميل</p>
+  <div style="display:flex;gap:8px;justify-content:center;margin:12px 0"><span class="tag">الإصدار ${a.version||'1.0'}</span><span class="tag">الحجم ${a.size||'--'}</span><span class="tag">آمن 100%</span></div>
+  <button class="btnMain" onclick="downloadApp('${id}')">⬇️ تحميل الآن - مجاني</button></div>
+  <div class="card"><b>📸 صور التطبيق</b><div style="display:flex;gap:8px;overflow-x:auto;margin-top:10px">${(a.shots||[]).map(s=>`<img src="${s}" style="width:140px;height:260px;object-fit:cover;border-radius:14px">`).join('')||'<small style="color:#888">مافي صور</small>'}</div></div>
+  <div class="card"><b>📝 شرح عن التطبيق</b><p style="color:#bbb;line-height:1.8;font-size:14px;margin-top:8px">${a.desc||'تطبيق رائع من متجر نصر APK'}</p></div>
+  <div class="card"><b>⭐ قيّم التطبيق</b><div style="display:flex;gap:6px;font-size:28px;margin:10px 0" id="stars">${[1,2,3,4,5].map(n=>`<span onclick="rateApp(${n})" style="cursor:pointer">⭐</span>`).join('')}</div>
+  <label>💭 اكتب تعليقك</label><input id="commentInput" placeholder="رأيك في التطبيق..."><button class="btnMain" onclick="addComment()">نشر التعليق 💬</button><div id="commentsList" style="margin-top:12px"></div></div>`;
+  openView('appDetailView'); loadComments(id);
+}
+window.downloadApp=(id)=>{
+  const a=apps[id]; update(ref(db,'apps/'+id),{downloads:(a.downloads||0)+1});
+  if(!myDownloads.includes(id)){myDownloads.push(id); localStorage.setItem('nasr_downloads',JSON.stringify(myDownloads));}
+  window.open(a.link||'#','_blank'); alert('بدأ التحميل ✅ شكراً لاستخدام متجر نصر APK');
+}
+window.rateApp=(n)=>{ if(!currentAppId) return; update(ref(db,'apps/'+currentAppId),{rating:n}); alert('شكراً لتقييمك '+n+' ⭐'); }
+window.addComment=()=>{
+  const t=document.getElementById('commentInput').value.trim(); if(!t) return;
+  push(ref(db,'comments/'+currentAppId),{phone:phone,text:t,time:Date.now()});
+  document.getElementById('commentInput').value=''; alert('تم نشر تعليقك ✅');
+}
+function loadComments(id){
+  onValue(ref(db,'comments/'+id),s=>{
+    const c=s.val()||{}; const el=document.getElementById('commentsList'); if(!el) return;
+    el.innerHTML=Object.values(c).reverse().map(x=>`<div style="background:#0f0f18;padding:10px;border-radius:12px;margin-bottom:8px"><b style="font-size:13px">👤 ${x.phone}</b><br>${x.text}</div>`).join('')||'<small style="color:#888">كن أول من يعلق</small>';
+    renderAdminComments();
+  });
+}
+window.doSearch=()=>{
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const res=Object.entries(apps).filter(([_,a])=>a.name.toLowerCase().includes(q));
+  document.getElementById('searchResult').innerHTML=res.map(([id,a])=>appCard(id,a)).join('')||'مافي نتائج';
+}
+
+// --- CHAT PUBLIC (نص + صور مثل واتساب) ---
+function startChatListener(){
+  if(!phone) return;
+  onChildAdded(ref(db,'chats/'+phone+'/messages'),snap=>{
+    const m=snap.val(); addMsgToUI(m);
+  });
+  onValue(ref(db,'chats/'+phone+'/messages'),s=>{
+    const all=s.val()||{}; document.getElementById('chatMsgs').innerHTML=''; Object.values(all).forEach(m=>addMsgToUI(m));
+  });
+}
+function addMsgToUI(m){
+  const box=document.getElementById('chatMsgs'); if(!box) return;
+  const div=document.createElement('div'); div.className='msg '+(m.sender==='store'?'other':'me');
+  div.innerHTML=(m.image?`<img src="${m.image}">`:'')+(m.text||'');
+  box.appendChild(div); box.scrollTop=9999;
+}
+window.sendChat=()=>{
+  const inp=document.getElementById('chatInput'); const t=inp.value.trim(); if(!t) return;
+  push(ref(db,'chats/'+phone+'/messages'),{sender:phone,name:phone,text:t,time:Date.now()}); inp.value='';
+}
+window.sendChatImage=async(e)=>{
+  const f=e.target.files[0]; if(!f) return; const b64=await fileToBase64(f);
+  push(ref(db,'chats/'+phone+'/messages'),{sender:phone,text:'📷 صورة',image:b64,time:Date.now()});
+}
+// --- NOTIF ---
+function listenNotifs(){
+  onChildAdded(ref(db,'notifications'),snap=>{
+    const n=snap.val(); const box=document.getElementById('notifBox');
+    box.innerText='🔔 '+n.text; box.style.display='block'; setTimeout(()=>box.style.display='none',5000);
+  });
+}
+
+// --- ADMIN ---
+function loadAdminStats(){
+  onValue(ref(db,'users'),s=>document.getElementById('statUsers').innerText=Object.keys(s.val()||{}).length);
+  onValue(ref(db,'apps'),s=>document.getElementById('statApps').innerText=Object.keys(s.val()||{}).length);
+  onValue(ref(db,'chats'),s=>document.getElementById('statChats').innerText=Object.keys(s.val()||{}).length);
+}
+function renderAdminUsers(){
+  document.getElementById('usersCount').innerText=Object.keys(users).length+' مشترك';
+  document.getElementById('adminUsersList').innerHTML=Object.values(users).map(u=>`<div class="card">👤 <b>${u.phone}</b><br><small>انضم: ${new Date(u.joined||Date.now()).toLocaleDateString('ar')}</small><br><button class="btnGhost" style="margin-top:8px" onclick="window.open('https://wa.me/967${u.phone}')">📱 واتساب</button></div>`).join('')||'مافي مشتركين';
+}
+function renderAdminChatList(){
+  document.getElementById('adminChatList').innerHTML=Object.entries(chats).map(([ph,c])=>{
+    const msgs=Object.values(c.messages||{}); const last=msgs[msgs.length-1];
+    return `<div class="appRow" onclick="openAdminChat('${ph}')"><div style="width:50px;height:50px;background:#a855f7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px">👤</div><div style="flex:1"><b>📱 ${ph}</b><br><small>${last?last.text.slice(0,40):''}</small></div><span style="color:#a855f7">›</span></div>`;
+  }).join('')||'مافي رسايل';
+}
+window.openAdminChat=(ph)=>{
+  currentChatPhone=ph; document.getElementById('adminChatTitle').innerText='💬 شات: '+ph;
+  onValue(ref(db,'chats/'+ph+'/messages'),s=>{
+    const all=s.val()||{}; const box=document.getElementById('adminChatMsgs');
+    box.innerHTML=Object.values(all).map(m=>`<div class="msg ${m.sender==='store'?'me':'other'}">${m.image?`<img src="${m.image}">`:''}${m.text||''}</div>`).join('');
+    box.scrollTop=9999;
+  });
+  openView('adminChatOneView');
+}
+window.adminSendReply=()=>{
+  const inp=document.getElementById('adminReplyInput'); const t=inp.value.trim(); if(!t||!currentChatPhone) return;
+  push(ref(db,'chats/'+currentChatPhone+'/messages'),{sender:'store',text:t,time:Date.now()}); inp.value='';
+}
+window.saveUpdate=()=>{
+  const id=document.getElementById('updSelect').value; const link=document.getElementById('updLink').value; const ver=document.getElementById('updVersion').value;
+  if(!id) return alert('اختر تطبيق');
+  update(ref(db,'apps/'+id),{link:link||apps[id].link,version:ver||apps[id].version,updatedAt:Date.now()});
+  push(ref(db,'notifications'),{text:'🔄 تحديث جديد: '+apps[id].name+' - الإصدار '+ver, time:Date.now()});
+  alert('تم حفظ التحديث ✅ ووصل إشعار للجمهور');
+}
+function renderAds(){
+  document.getElementById('adsArea').innerHTML=Object.entries(ads).map(([id,a])=>`<div class="banner"><img src="${a.image}"><div class="bannerTxt"><b>${a.title||''}</b></div></div>`).join('')||'<p style="color:#888;text-align:center;padding:10px">مافي إعلانات حالياً</p>';
+}
+function renderAdminAds(){
+  document.getElementById('adminAdsList').innerHTML=Object.entries(ads).map(([id,a])=>`<div class="card"><img src="${a.image}" style="width:100%;height:120px;object-fit:cover;border-radius:12px"><b>${a.title}</b><br><button class="btnGhost" style="margin-top:8px;color:#ff6b6b" onclick="deleteAd('${id}')">🗑️ حذف الإعلان</button></div>`).join('');
+}
+window.addAd=async()=>{
+  const f=document.getElementById('adFile').files[0]; if(!f) return alert('اختر صورة من ملفاتك');
+  const b64=await fileToBase64(f); const title=document.getElementById('adTitle').value||'إعلان';
+  push(ref(db,'ads'),{image:b64,title,time:Date.now()}); alert('تم إضافة الإعلان ✅');
+}
+window.deleteAd=(id)=>{if(confirm('تحذف الإعلان؟')) remove(ref(db,'ads/'+id));}
+window.sendNotif=()=>{
+  const t=document.getElementById('notifText').value.trim(); if(!t) return;
+  push(ref(db,'notifications'),{text:t,time:Date.now()}); document.getElementById('notifText').value=''; alert('تم إرسال الإشعار للكل ✅');
+}
+window.addApp=async()=>{
+  const iconF=document.getElementById('appIconFile').files[0];
+  const icon=iconF?await fileToBase64(iconF):'https://via.placeholder.com/100';
+  const shotsFiles=document.getElementById('appShotsFile').files;
+  let shots=[]; for(let f of shotsFiles){shots.push(await fileToBase64(f));}
+  const data={name:document.getElementById('appName').value,cat:document.getElementById('appCat').value,link:document.getElementById('appLink').value,version:document.getElementById('appVersion').value||'1.0',size:document.getElementById('appSize').value,desc:document.getElementById('appDesc').value,icon,shots,downloads:0,rating:5,time:Date.now()};
+  if(!data.name||!data.link) return alert('اكتب اسم التطبيق ورابط الملف');
+  push(ref(db,'apps'),data); alert('تم نشر التطبيق 🚀');
+}
+function renderAdminApps(){
+  document.getElementById('adminAppsList').innerHTML=Object.entries(apps).map(([id,a])=>`<div class="appRow"><img src="${a.icon}"><div style="flex:1"><b>${a.name}</b><br><small>${a.cat} • v${a.version} • ${a.downloads||0} تحميل</small></div><button onclick="deleteApp('${id}')" style="background:#ff6b6b;color:#fff;padding:8px 12px;border-radius:10px">حذف</button></div>`).join('');
+}
+window.deleteApp=(id)=>{if(confirm('تحذف التطبيق؟')) remove(ref(db,'apps/'+id));}
+function renderAdminComments(){
+  onValue(ref(db,'comments'),s=>{
+    const all=s.val()||{}; let html='';
+    Object.entries(all).forEach(([appId,cmts])=>{
+      const appName=apps[appId]?.name||appId;
+      html+=`<div class="card"><b>📱 ${appName}</b>`+Object.values(cmts).map(c=>`<div style="background:#0f0f18;padding:10px;border-radius:10px;margin-top:8px"><b>${c.phone}</b><br>${c.text}<br><button style="background:none;color:#ff6b6b" onclick="deleteComment('${appId}','${c.time}')">حذف</button></div>`).join('')+'</div>';
+    });
+    document.getElementById('adminCommentsList').innerHTML=html||'مافي تعليقات';
+  });
+}
+window.deleteComment=()=>{alert('لحذف تعليق احذفه من Firebase > comments');}
+
+// --- INIT ---
+if(phone==='915798'){isAdmin=true; document.getElementById('loginView').style.display='none'; document.getElementById('mainHeader').style.display='none'; document.getElementById('bottomNav').style.display='none'; openView('adminHomeView'); loadAdminStats();}
+else if(phone){document.getElementById('loginView').style.display='none'; document.getElementById('drawerPhone').innerText='👤 '+phone; startChatListener(); listenNotifs();}
+else{setTimeout(()=>{document.getElementById('loginView').style.display='flex'},3000);}
+setTimeout(()=>{document.getElementById('splash').style.display='none'},3400);
+</script>
+</body>
+</html>
